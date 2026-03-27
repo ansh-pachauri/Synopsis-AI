@@ -1,3 +1,4 @@
+import LoginButton from "../components/react-common/loginButton";
 
 export default function Home() {
   return (
@@ -9,7 +10,8 @@ export default function Home() {
         AI-Powered Research Assistant
       </p>
 
-      {/*  */}
+      {/* Login Button */}
+      <LoginButton/>
     </div>
   );
 }

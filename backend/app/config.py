@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str
     TAVILY_API_KEY: str
     DATABASE_URL:str
+    SUPABASE_URL:str
+    SUPABASE_JWT_SECRET:str
+    SUPABASE_ANON_KEY:str
 
 @lru_cache
 def settings() -> Settings:
