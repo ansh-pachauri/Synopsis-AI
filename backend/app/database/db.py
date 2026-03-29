@@ -1,9 +1,16 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-from app.config import Settings
+from sqlalchemy.orm import sessionmaker, Session
+from app.config import settings
+from app.database.base import Base  # noqa: F401 — re-exported for convenience
 
-engine = create_engine(Settings.DATABASE_URL)
+engine = create_engine(settings().DATABASE_URL)
 
 SessionLocal = sessionmaker(bind=engine)
 
-Base = declarative_base()
+
+def get_db():
+    db: Session = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

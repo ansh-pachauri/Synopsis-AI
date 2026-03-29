@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
 import uuid
-from .db import Base
+from .base import Base
 
 
 # user model
@@ -29,7 +29,8 @@ class ResearchQuery(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow) 
     embedding = relationship("Embedding", back_populates="research_query", uselist=False)
-    user = relationship("User", back_populates="research_query")
+    user = relationship("User", back_populates="research")
+    report = relationship("Report", back_populates="research_query")
     
 
  
@@ -38,7 +39,20 @@ class Embedding(Base):
     __tablename__ = "embedding"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     research_query_id = Column(UUID(as_uuid=True), ForeignKey("research_query.id"))
-    embedding = Vector(768)  # assuming 768 dimensions for the embedding
+    embedding = Column(Vector(768))  # assuming 768 dimensions for the embedding
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow) 
     research_query = relationship("ResearchQuery", back_populates="embedding")
+
+
+class Report(Base):
+    __tablename__ = "report"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    research_query_id = Column(UUID(as_uuid=True), ForeignKey("research_query.id"))
+    title = Column(String)
+    sections = Column(String)  # JSON string of sections
+    summary = Column(String)
+    key_takeaways = Column(String)  # JSON string of key takeaways
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+    research_query = relationship("ResearchQuery")
